@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=IPython Notebook
+Comment=Interactive Python notebook
+Exec=PREFIX/bin/ipython-notebook-wrapper
+Terminal=false
+Type=Application
+StartupNotify=true
+MimeType=
+Icon=terminal
+Categories=Science;

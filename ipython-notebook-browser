@@ -1,0 +1,156 @@
+#!/usr/bin/python
+
+#
+# Simple web shell for IPython Notebook.
+#
+# Use as follows:
+#
+# BROWSER=ipython-notebook-browser ipython notebook
+#
+
+from PySide.QtCore import *
+from PySide.QtGui import *
+from PySide.QtWebKit import *
+from sys import argv
+from sets import Set
+
+APPLICATION_NAME = "IPython Notebook"
+
+class IPythonWebView(QWebView):
+    """
+    QWebView wrapper.  Used to implement Javascript's window.open().
+    """
+    
+    def __init__(self):
+        """
+        Constructor.
+        """
+        
+        QWebView.__init__(self)
+        
+        self.setAttribute(Qt.WA_DeleteOnClose, True)
+        
+        self.settings().setAttribute(QWebSettings.JavascriptEnabled, True)
+        self.settings().setAttribute(QWebSettings.JavascriptCanOpenWindows, True)
+            
+        self.childWindows = Set()
+            
+    def childWindowClosing(self, window):
+        """
+        Child window closing.  Remove our reference to it.
+        """
+
+        self.childWindows.remove(window)
+            
+    def createWindow(self, windowType):
+        """
+        Create a new IPythonNotebookWindow.
+        """
+        
+        newWin = IPythonNotebookWindow()
+        
+        # Set window type.
+        if windowType == QWebPage.WebModalDialog:
+            newWin.setWindowModality(Qt.ApplicationModal)
+            
+        # Keep a reference to the new window.
+        self.childWindows.add(newWin)
+        newWin.closing.connect(self.childWindowClosing)
+        
+        # Show window.
+        newWin.show()
+        
+        # Return contained QWebView.
+        return newWin.view
+
+class IPythonNotebookWindow(QWidget):
+    """
+    Simple web browser window.
+    """
+    
+    closing = Signal(QWidget)
+    
+    def __init__(self):
+        """
+        Constructor.
+        """
+        
+        QWidget.__init__(self)
+        
+        self.setAttribute(Qt.WA_DeleteOnClose, True)
+        
+        # Set window title:
+        self.setWindowTitle(APPLICATION_NAME + ": Loading...");
+        
+        # And give it a layout:
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+         
+        # Create an IPythonWebView:
+        self.view = IPythonWebView()
+        
+        self.view.titleChanged.connect(self.titleChanged)
+
+        # Add the web view to the layout:
+        layout.addWidget(self.view)
+        
+        # Create F11 keyboard shortcut for fullscreen:
+        self.fullscreen = False
+        QShortcut(QKeySequence("F11"), self, self.toggleFullscreen)
+        
+    def closeEvent(self, event):
+        """
+        Close event received.  Notify parent windows.
+        """
+        
+        self.closing.emit(self)
+        
+        event.accept()
+    
+    def toggleFullscreen(self):
+        """
+        Toggle fullscreen mode on or off.
+        """
+        
+        if self.fullscreen:
+            # Load geometry.
+            self.setGeometry(self.normalGeometry)
+            
+            # Go back to normal.
+            self.setWindowFlags(0)
+            self.showNormal()
+            
+            self.fullscreen = False
+            
+        else:
+            # Store geometry.
+            self.normalGeometry = self.geometry()
+            
+            # Go to fullscreen.
+            self.setWindowFlags(Qt.FramelessWindowHint)
+            self.showFullScreen()
+            
+            self.fullscreen = True
+            
+    def titleChanged(self, title):
+        """
+        Webkit title changed.  Update window title.
+        """
+        
+        self.setWindowTitle(APPLICATION_NAME + ": " + title)
+
+# Create application:
+app = QApplication(argv)
+app.setApplicationName(APPLICATION_NAME)
+ 
+# Set up window:
+win = IPythonNotebookWindow()
+
+# Load URL, if specified:
+if len(argv) > 1:
+    win.view.setUrl(argv[1])
+ 
+# Show the window and run the app:
+win.show()
+app.exec_()

@@ -52,3 +52,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Custom
+ipython-notebook-wrapper
+ipython-notebook-wrapper.desktop

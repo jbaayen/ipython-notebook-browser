@@ -1,0 +1,2 @@
+#!/bin/sh
+BROWSER=PREFIX/bin/ipython-notebook-browser ipython notebook
