@@ -54,5 +54,6 @@ docs/_build/
 target/
 
 # Custom
+ipython-notebook-browser
 ipython-notebook-wrapper
 ipython-notebook-wrapper.desktop

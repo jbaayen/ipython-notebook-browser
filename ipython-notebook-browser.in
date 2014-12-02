@@ -15,7 +15,7 @@ from sys import argv
 from sets import Set
 
 APPLICATION_NAME = "IPython Notebook"
-APPLICATION_ICON = "/home/jorn/.local/share/icons/hicolor/scalable/apps/ipython-notebook-wrapper.svg"
+APPLICATION_ICON = "PREFIX/share/icons/hicolor/scalable/apps/ipython-notebook-wrapper.svg"
 
 class IPythonWebView(QWebView):
     """
