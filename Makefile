@@ -17,6 +17,8 @@ install: ipython-notebook-browser ipython-notebook-wrapper ipython-notebook-wrap
 	chmod +x ${PREFIX}/bin/ipython-notebook-browser ${PREFIX}/bin/ipython-notebook-wrapper
 	mkdir -p ${PREFIX}/share/icons/hicolor/scalable/apps
 	cp ipython-notebook-wrapper.svg ${PREFIX}/share/icons/hicolor/scalable/apps
+	mkdir -p ${PREFIX}/share/mime/packages
+	cp ipython-notebook-wrapper.xml ${PREFIX}/share/mime/packages
 	desktop-file-install --rebuild-mime-info-cache ipython-notebook-wrapper.desktop --dir=${PREFIX}/share/applications	
 	
 clean:

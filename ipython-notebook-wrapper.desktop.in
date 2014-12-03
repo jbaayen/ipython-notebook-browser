@@ -1,10 +1,10 @@
 [Desktop Entry]
 Name=IPython Notebook
 Comment=Interactive Python notebook
-Exec=PREFIX/bin/ipython-notebook-wrapper
+Exec=PREFIX/bin/ipython-notebook-wrapper %f
 Terminal=false
 Type=Application
 StartupNotify=true
-MimeType=
+MimeType=application/x-ipython-notebook;
 Icon=PREFIX/share/icons/hicolor/scalable/apps/ipython-notebook-wrapper.svg
 Categories=Science;

@@ -1,2 +1,2 @@
 #!/bin/sh
-BROWSER=PREFIX/bin/ipython-notebook-browser ipython notebook
+BROWSER=PREFIX/bin/ipython-notebook-browser ipython notebook $1
