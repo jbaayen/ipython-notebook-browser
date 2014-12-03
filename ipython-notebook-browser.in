@@ -14,6 +14,7 @@ from PySide.QtWebKit import *
 from sys import argv
 from sets import Set
 
+APPLICATION_EXEC = "ipython-notebook-wrapper" # Required for GNOME 3 to associate the python script with the .desktop file.
 APPLICATION_NAME = "IPython Notebook"
 APPLICATION_ICON = "PREFIX/share/icons/hicolor/scalable/apps/ipython-notebook-wrapper.svg"
 
@@ -142,7 +143,7 @@ class IPythonNotebookWindow(QWidget):
         self.setWindowTitle(APPLICATION_NAME + ": " + title)
 
 # Create application:
-app = QApplication(argv)
+app = QApplication([APPLICATION_EXEC] + argv[1:])
 app.setApplicationName(APPLICATION_NAME)
 app.setWindowIcon(QIcon(APPLICATION_ICON))
  
